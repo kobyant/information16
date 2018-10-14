@@ -19,7 +19,7 @@
 from info import create_app
 
 #调用业务模块获取app
-app = create_app()
+app = create_app("develop")
 
 
 @app.route('/')

@@ -20,3 +20,22 @@ class Config(object):
     SESSION_REDIS = redis.StrictRedis(host=REDIS_HOST,port=REDIS_PORT)
     SESSION_USE_SIGNER = True
     PERMANENT_SESSION_LIFETIME = 3600*24*2 #两天有效期,单位默认就是秒
+
+#开发环境
+class DevelopConfig(Config):
+    pass
+
+#生产环境(线上环境)
+class ProductConfig(Config):
+    DEBUG = False
+
+#测试环境
+class TestingConfig(Config):
+    TESTING = True
+
+#配置环境的统一访问入口
+config_dict = {
+    "develop":DevelopConfig,
+    "product":ProductConfig,
+    "testing":TestingConfig
+}
