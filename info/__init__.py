@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 import redis
 from flask_wtf import CSRFProtect
 from config import config_dict
+from info.modules.index import index_blu
 
 def create_app(config_name):
 
@@ -33,6 +34,9 @@ def create_app(config_name):
 
     # 使用Session,关联app,指定存储位置
     Session(app)
+
+    #将首页蓝图对象index_blue注册到app
+    app.register_blueprint(index_blu)
 
     return app
 
