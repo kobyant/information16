@@ -15,7 +15,8 @@
 6.数据库迁移配置
 
 """""
-from flask import Flask
+from flask import Flask,session
+from flask_session import Session #指定session存储位置
 from flask_sqlalchemy import SQLAlchemy
 import redis
 from flask_wtf import CSRFProtect
@@ -36,6 +37,12 @@ class Config(object):
     REDIS_HOST = "127.0.0.1"
     REDIS_PORT = 6379
 
+    #session配置
+    SESSION_TYPE = "redis"
+    SESSION_REDIS = redis.StrictRedis(host=REDIS_HOST,port=REDIS_PORT)
+    SESSION_USE_SIGNER = True
+    PERMANENT_SESSION_LIFETIME = 3600*24*2 #两天有效期,单位默认就是秒
+
 
 app.config.from_object(Config)
 
@@ -48,13 +55,19 @@ redis_store = redis.StrictRedis(host=Config.REDIS_HOST,port=Config.REDIS_PORT,de
 #使用CSRFProtect,对app做请求保护
 CSRFProtect(app)
 
-@app.route('/',methods=["POST"])
+#使用Session,关联app,指定存储位置
+Session(app)
+
+@app.route('/')
 def hello_world():
 
     #测试redis,存取数据
     redis_store.set("name","laowang")
     print(redis_store.get("name"))
 
+    #测试session,存取数据
+    session["age"] = "13"
+    print(session.get("age"))
 
     return "helloworld100"
 
