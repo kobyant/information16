@@ -15,15 +15,23 @@
 6.数据库迁移配置
 
 """""
-import logging
-from flask import current_app
-from info import create_app
+from info import create_app,db,models #导入目的,只是为了让当前项目知道有该文件的存在
+from flask_script import Manager
+from flask_migrate import MigrateCommand,Migrate
 
 #调用业务模块获取app
 app = create_app("develop")
 
+#创建Manager对象,关联app
+manager = Manager(app)
+
+#使用 Migrate,关联app,db
+Migrate(app,db)
+
+#给manager添加操作命令
+manager.add_command("db",MigrateCommand)
 
 
 
 if __name__ == '__main__':
-    app.run()
+    manager.run()
