@@ -11,6 +11,9 @@ from config import config_dict
 #定义redis_store
 redis_store = None
 
+#定义db
+db = SQLAlchemy()
+
 def create_app(config_name):
 
 
@@ -26,7 +29,8 @@ def create_app(config_name):
     app.config.from_object(config)
 
     # 创建SQLAlchemy对象,关联app
-    db = SQLAlchemy(app)
+    # db = SQLAlchemy(app) # 等价于, db = SQLAlchemy(),   db.init_app(app)
+    db.init_app(app)
 
     # 创建redis对象
     global redis_store
