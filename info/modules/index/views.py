@@ -1,33 +1,30 @@
 from info import redis_store
+from info.models import User
 from . import index_blu
-from flask import render_template,current_app
-
+from flask import render_template, current_app, session
 
 
 @index_blu.route('/')
 def hello_world():
 
-    #测试redis,存取数据
-    redis_store.set("name","laowang")
-    print(redis_store.get("name"))
+    #1.取出session,中的用户编号
+    user_id = session.get("user_id")
 
-    #测试session,存取数据
-    # session["age"] = "13"
-    # print(session.get("age"))
+    #2.获取用户对象
+    user = None
+    if user_id:
+        try:
+            user = User.query.get(user_id)
+        except Exception as e:
+            current_app.logger.error(e)
 
-    #使用loggin日志模块输出内容
-    # logging.debug("调试信息1")
-    # logging.info("详细信息1")
-    # logging.warning("警告信息1")
-    # logging.error("错误信息1")
+    #3.拼接用户数据渲染页面
+    data = {
+        #如果user不为空,返回左边的内容, 为空返回右边内容
+        "user_info":user.to_dict() if user else ""
+    }
 
-    #上面的方式可以使用current_app输出,在控制台输出的时候有华丽分割线,写入到文件是一样的
-    # current_app.logger.debug("调试信息2")
-    # current_app.logger.info("详细信息2")
-    # current_app.logger.warning("警告信息2")
-    # current_app.logger.error("错误信息2")
-
-    return render_template("news/index.html")
+    return render_template("news/index.html",data=data)
 
 #处理网站logo
 #每个浏览器在访问服务器的时候,会自动向该服务器发送GET请求,地址是:/favicon.ico
