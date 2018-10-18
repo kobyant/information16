@@ -9,4 +9,8 @@ from flask import render_template
 @user_blue.route('/info')
 def user_info():
 
-    return render_template("news/user.html")
+    data = {
+
+    }
+
+    return render_template("news/user.html",data=data)
