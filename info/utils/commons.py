@@ -16,7 +16,7 @@ def index_class(index):
 
 #用户登陆的装饰器
 def user_login_data(view_func):
-    @wraps(view_func)
+    # @wraps(view_func)
     def wrapper(*args,**kwargs):
 
         # 取出sessioin,用户编号
