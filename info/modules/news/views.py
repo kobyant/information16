@@ -11,6 +11,7 @@ from flask import render_template, current_app, jsonify, abort, session, g, requ
 # 请求参数:news_id,action, g.user
 # 返回值: errno,errmsg
 @news_blue.route('/news_collect', methods=['POST'])
+@user_login_data
 def news_collect():
     """
     1. 判断用户登陆状态
