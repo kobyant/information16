@@ -1,7 +1,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask,session
+from flask import Flask, session, render_template, g
 from flask_session import Session #指定session存储位置
 from flask_sqlalchemy import SQLAlchemy
 import redis
@@ -10,7 +10,7 @@ from flask_wtf.csrf import  generate_csrf
 from config import config_dict
 
 #定义redis_store
-from info.utils.commons import index_class
+from info.utils.commons import index_class, user_login_data
 
 redis_store = None
 
@@ -63,6 +63,13 @@ def create_app(config_name):
 
     #将过滤器,添加到默认过滤器列表中
     app.add_template_filter(index_class,"index_class")
+
+    #捕捉404错误信息
+    @app.errorhandler(404)
+    @user_login_data
+    def page_not_found(e):
+        data = {"user_info":g.user.to_dict() if g.user else ""}
+        return render_template("news/404.html",data=data)
 
     #使用请求钩子,after_request拦截所有响应
     @app.after_request
