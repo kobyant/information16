@@ -35,6 +35,11 @@ def admin_login():
     """
     # - 1.判断请求方式,如果是GET请求,直接返回登陆页面
     if request.method == 'GET':
+
+        #判断管理员是否,已经登陆过
+        if session.get("is_admin"):
+            return redirect("/admin/index")
+
         return render_template("admin/login.html")
 
     # - 2.如果是POST,获取参数
