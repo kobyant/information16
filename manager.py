@@ -20,6 +20,8 @@ from flask_script import Manager
 from flask_migrate import MigrateCommand,Migrate
 
 #调用业务模块获取app
+from info.models import User
+
 app = create_app("develop")
 
 #创建Manager对象,关联app
@@ -30,6 +32,31 @@ Migrate(app,db)
 
 #给manager添加操作命令
 manager.add_command("db",MigrateCommand)
+
+#创建管理员方法
+#@manager.option 装饰方法,可以通过命令行的方式调用
+#参数1: 表示传递的名称   参数2: 是参数名称的解释  参数3: 传递到形式参数的变量
+@manager.option('-p', '--password', dest='password')
+@manager.option('-u', '--username', dest='username')
+def create_superuser(username,password):
+
+    #1.创建管理员对象
+    admin = User()
+
+    #2.设置属性
+    admin.nick_name = username
+    admin.password = password
+    admin.mobile = username
+    admin.is_admin = True
+
+    #3.保存管理员到数据库
+    try:
+        db.session.add(admin)
+        db.session.commit()
+    except Exception as e:
+        return "注册失败"
+
+    return "注册成功"
 
 
 
