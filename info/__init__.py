@@ -1,7 +1,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 
-from flask import Flask, session, render_template, g
+from flask import Flask, session, render_template, g, request
 from flask_session import Session #指定session存储位置
 from flask_sqlalchemy import SQLAlchemy
 import redis
